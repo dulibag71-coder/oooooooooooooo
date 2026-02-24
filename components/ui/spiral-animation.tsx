@@ -31,7 +31,7 @@ export const SpiralAnimation = () => {
             const angleStep = 0.1
 
             ctx.beginPath()
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.3)'
             ctx.lineWidth = 1
 
             for (let i = 0; i < points; i++) {

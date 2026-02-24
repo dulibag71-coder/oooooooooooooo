@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "골프 분석 웹사이트",
-  description: "골프 분석 웹사이트",
+  title: "AI Golf Coach - Premium Swing Analysis",
+  description: "Elevate your game with professional-grade AI swing analysis. Get instant feedback and improve your golf swing with precision.",
 };
 
 export default function RootLayout({
