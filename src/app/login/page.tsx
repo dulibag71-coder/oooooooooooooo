@@ -41,8 +41,11 @@ export default function LoginPage() {
             {/* Login Container */}
             <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
                 <div className="w-full max-w-md space-y-8 rounded-2xl bg-black/40 p-10 backdrop-blur-xl border border-white/5 shadow-2xl">
-                    <div className="text-center">
-                        <h2 className="text-3xl font-mono tracking-widest text-white uppercase mb-2">
+                    <div className="text-center" suppressHydrationWarning>
+                        <h2
+                            className="text-3xl font-mono tracking-widest text-white uppercase mb-2"
+                            suppressHydrationWarning
+                        >
                             Welcome Back
                         </h2>
                         <p className="text-emerald-500/80 font-light tracking-wide text-sm">

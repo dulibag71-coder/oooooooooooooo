@@ -21,7 +21,7 @@ CREATE POLICY "Users can insert their own profile." ON public.users
 CREATE POLICY "Users can update own profile." ON public.users
   FOR UPDATE USING (auth.uid() = id);
 
--- 4. Create a function to handle new user signups
+-- 4. Create a function to handle new user signups with robust metadata mapping
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -29,8 +29,8 @@ BEGIN
   VALUES (
     new.id,
     new.email,
-    new.raw_user_meta_data->>'full_name',
-    new.raw_user_meta_data->>'avatar_url'
+    COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', ''),
+    COALESCE(new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'picture', '')
   );
   RETURN new;
 END;
