@@ -8,7 +8,7 @@ const Hero = () => {
 
     // Handle navigation to personal site
     const navigateToPersonalSite = () => {
-        window.location.href = "https://xubh.top/"
+        window.location.href = "/login"
     }
 
     // Fade in the start button after animation loads
