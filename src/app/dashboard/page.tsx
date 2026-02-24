@@ -61,9 +61,12 @@ export default function DashboardPage() {
 
                 {/* Dashboard Grid Placeholder */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="col-span-2 aspect-video rounded-2xl bg-black/40 border border-white/5 p-8 flex flex-col justify-end group cursor-pointer hover:border-emerald-500/30 transition-all">
-                        <span className="text-emerald-500 font-mono text-xs uppercase mb-2">New Analysis</span>
-                        <h3 className="text-2xl font-medium mb-4">Upload Recent Swing Video</h3>
+                    <div
+                        onClick={() => router.push('/ai-coach')}
+                        className="col-span-2 aspect-video rounded-2xl bg-black/40 border border-white/5 p-8 flex flex-col justify-end group cursor-pointer hover:border-emerald-500/30 transition-all"
+                    >
+                        <span className="text-emerald-500 font-mono text-xs uppercase mb-2">Technical Coaching</span>
+                        <h3 className="text-2xl font-medium mb-4">Launch AI Swing Assistant</h3>
                         <div className="w-12 h-1 bg-zinc-800 group-hover:w-full transition-all duration-500" />
                     </div>
 
