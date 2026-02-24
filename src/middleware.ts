@@ -56,8 +56,12 @@ export async function middleware(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    // Protect dashboard and ai-coach routes
-    if (!user && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/ai-coach'))) {
+    // Protect dashboard, ai-coach, and analysis routes
+    if (!user && (
+        request.nextUrl.pathname.startsWith('/dashboard') ||
+        request.nextUrl.pathname.startsWith('/ai-coach') ||
+        request.nextUrl.pathname.startsWith('/analysis')
+    )) {
         return NextResponse.redirect(new URL('/login', request.url))
     }
 
