@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
     try {
-        const { videoData, fileName } = await req.json();
+        const { videoData, fileName, userInput } = await req.json();
 
         if (!videoData) {
             return NextResponse.json({ error: 'No video data provided' }, { status: 400 });
@@ -17,12 +17,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'API configuration error' }, { status: 500 });
         }
 
-        // Note: Most LLMs through OpenRouter currently support images best for multimodal.
-        // Ideally, for video, we would extract frames. For this implementation, 
-        // we assume the frontend might send a base64 encoded thumbnail or the first frame if data size is constrained,
-        // or we use a model that supports video URLs if available.
-        // For now, we'll implement a robust multimodal prompt.
-
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -32,23 +26,23 @@ export async function POST(req: NextRequest) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "model": "google/gemini-2.0-flash-001", // High performance multimodal model
+                "model": "google/gemini-2.0-flash-001",
                 "messages": [
                     {
                         "role": "system",
-                        "content": "You are a professional PGA golf coach and swing analyst. Analyze the user's golf swing provided in the visual data. Provide a structured analysis covering: 1. Setup & Posture, 2. Backswing & Top, 3. Downswing & Impact, 4. Follow-through. Give 2-3 specific, actionable drills for improvement. Keep the tone encouraging and professional. Respond in Korean."
+                        "content": "당신은 전문 PGA 골프 코치이자 스윙 분석 전문가입니다. 사용자의 스윙 영상을 분석하고 피드백을 제공해 주세요. 사용자가 별도로 질문이나 요청사항(userInput)을 입력했다면 그 부분을 중점적으로 답변에 포함해 주세요. 1. 셋업 및 자세, 2. 백스윙 및 탑, 3. 다운스윙 및 임팩트, 4. 팔로스루 순서로 분석하며, 마지막에 구체적인 연습 방법 2-3개를 제안해 주세요. 답변은 한국어로 작성해 주세요."
                     },
                     {
                         "role": "user",
                         "content": [
                             {
                                 "type": "text",
-                                "text": `Please analyze my golf swing video: ${fileName || 'swing_video.mp4'}`
+                                "text": `Please analyze my golf swing video: ${fileName || 'swing_video.mp4'}${userInput ? `\n\nUser Specific Question/Instruction: ${userInput}` : ''}`
                             },
                             {
                                 "type": "image_url",
                                 "image_url": {
-                                    "url": videoData // Expecting base64 data or image URL
+                                    "url": videoData
                                 }
                             }
                         ]

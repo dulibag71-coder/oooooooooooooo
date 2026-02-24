@@ -22,6 +22,7 @@ export function VideoAnalysis() {
     const [isDragging, setIsDragging] = useState(false)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [analysisResult, setAnalysisResult] = useState<string | null>(null)
+    const [userInput, setUserInput] = useState('')
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
@@ -66,8 +67,6 @@ export function VideoAnalysis() {
 
         try {
             // 1. Convert file to base64 for multimodal analysis
-            // Note: For real production, we might want to extract a frame or upload to storage first.
-            // Here we use a FileReader for demonstration with base64.
             const reader = new FileReader();
             const base64Promise = new Promise<string>((resolve, reject) => {
                 reader.onload = () => resolve(reader.result as string);
@@ -77,7 +76,7 @@ export function VideoAnalysis() {
 
             const base64Data = await base64Promise;
 
-            // 2. Call our API route
+            // 2. Call our API route with userInput
             const response = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: {
@@ -85,7 +84,8 @@ export function VideoAnalysis() {
                 },
                 body: JSON.stringify({
                     videoData: base64Data,
-                    fileName: fileName
+                    fileName: fileName,
+                    userInput: userInput
                 }),
             });
 
@@ -178,19 +178,36 @@ export function VideoAnalysis() {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
-                            <FileVideo className="w-5 h-5 text-emerald-500" />
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-white truncate">{fileName}</p>
-                                <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">Ready for Engine Analysis</p>
+                        <div className="space-y-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                            <div className="flex items-center gap-3">
+                                <FileVideo className="w-5 h-5 text-emerald-500" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-white truncate">{fileName}</p>
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">Ready for Engine Analysis</p>
+                                </div>
                             </div>
-                            <Button
-                                onClick={runAnalysis}
-                                disabled={isAnalyzing}
-                                className="shadow-lg shadow-emerald-500/20"
-                            >
-                                {isAnalyzing ? "Analyzing..." : "AI 분석 시작"}
-                            </Button>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest pl-1">
+                                    Specific Instruction (Optional)
+                                </label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        value={userInput}
+                                        onChange={(e) => setUserInput(e.target.value)}
+                                        placeholder="어떤 부분을 중점적으로 분석해 드릴까요? (예: 비거리, 슬라이스 등)"
+                                        className="bg-black/20 focus:bg-black/40"
+                                        onKeyDown={(e) => e.key === 'Enter' && !isAnalyzing && runAnalysis()}
+                                    />
+                                    <Button
+                                        onClick={runAnalysis}
+                                        disabled={isAnalyzing}
+                                        className="shadow-lg shadow-emerald-500/20 whitespace-nowrap"
+                                    >
+                                        {isAnalyzing ? "Analyzing..." : "AI 분석 시작"}
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
                 )}
