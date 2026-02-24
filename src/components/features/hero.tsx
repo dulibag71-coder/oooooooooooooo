@@ -2,13 +2,21 @@
 
 import { SpiralAnimation } from "@/components/ui/spiral-animation"
 import { useState, useEffect } from 'react'
+import { useAuth } from '@/context/auth-context'
+import { useRouter } from 'next/navigation'
 
 const Hero = () => {
     const [startVisible, setStartVisible] = useState(false)
+    const { user, loading } = useAuth()
+    const router = useRouter()
 
-    // Handle navigation to personal site
-    const navigateToPersonalSite = () => {
-        window.location.href = "/login"
+    // Handle navigation
+    const handleStartClick = () => {
+        if (!loading && user) {
+            router.push("/dashboard")
+        } else {
+            router.push("/login")
+        }
     }
 
     // Fade in the start button after animation loads
@@ -44,7 +52,7 @@ const Hero = () => {
                 </p>
 
                 <button
-                    onClick={navigateToPersonalSite}
+                    onClick={handleStartClick}
                     className="
             relative group
             text-white text-xl md:text-2xl tracking-[0.2em] font-mono border border-emerald-500/30 px-12 py-4
@@ -53,9 +61,17 @@ const Hero = () => {
             cursor-pointer bg-black/40 backdrop-blur-sm
           "
                 >
-                    <span className="relative z-10">무료 스윙 분석 시작하기</span>
+                    <span className="relative z-10">
+                        {(!loading && user) ? '대시보드로 이동하기' : '무료 스윙 분석 시작하기'}
+                    </span>
                     <div className="absolute inset-0 bg-emerald-500/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </button>
+
+                {(!loading && user) && (
+                    <p className="mt-6 text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">
+                        Welcome back, {user.user_metadata.full_name || 'Golfer'}
+                    </p>
+                )}
             </div>
         </div>
     )

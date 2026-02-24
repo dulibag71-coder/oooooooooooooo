@@ -34,6 +34,7 @@ export async function GET(request: Request) {
         )
         const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!error) {
+            // Ensure we use the origin from the request to stay consistent
             return NextResponse.redirect(`${origin}${next}`)
         }
     }

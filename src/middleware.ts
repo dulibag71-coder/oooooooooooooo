@@ -65,8 +65,8 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url))
     }
 
-    // Redirect away from login if authenticated
-    if (user && request.nextUrl.pathname.startsWith('/login')) {
+    // Redirect away from login or landing page if authenticated
+    if (user && (request.nextUrl.pathname === '/' || request.nextUrl.pathname.startsWith('/login'))) {
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 

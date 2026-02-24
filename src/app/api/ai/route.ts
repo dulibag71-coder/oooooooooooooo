@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
         const { type, messages, videoData, fileName, userInput } = body;
 
         const apiKey = process.env.OPENROUTER_API_KEY;
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001';
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
         const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'AI Golf Swing Tech';
 
         if (!apiKey) {
