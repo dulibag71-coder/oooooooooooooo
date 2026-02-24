@@ -12,9 +12,17 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (!loading && user) {
-            router.push('/')
+            router.push('/dashboard')
         }
     }, [user, loading, router])
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-[#171717] text-emerald-500 font-mono">
+                INITIALIZING...
+            </div>
+        )
+    }
 
     const handleGoogleLogin = async () => {
         try {
@@ -48,7 +56,7 @@ export default function LoginPage() {
                         >
                             Welcome Back
                         </h2>
-                        <p className="text-emerald-500/80 font-light tracking-wide text-sm">
+                        <p className="text-emerald-500/80 font-light tracking-wide text-sm" suppressHydrationWarning>
                             Premium Golf Swing Analysis
                         </p>
                     </div>
