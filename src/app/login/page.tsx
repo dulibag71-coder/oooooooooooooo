@@ -1,10 +1,8 @@
 'use client'
 
 import { LiquidGrassAnimation } from "@/components/ui/liquid-grass-animation"
-import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
-    const router = useRouter()
 
     const handleGoogleLogin = () => {
         // Implementation for future use
