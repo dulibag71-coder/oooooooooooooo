@@ -34,7 +34,7 @@ export function AnimatedAIChat() {
     }, [messages, isTyping])
 
     const handleSend = async () => {
-        if (!input.trim()) return
+        if (!input.trim() || isTyping) return
 
         const userMsg: Message = {
             id: Date.now().toString(),
@@ -44,20 +44,49 @@ export function AnimatedAIChat() {
         }
 
         setMessages(prev => [...prev, userMsg])
+        const currentInput = input
         setInput('')
         setIsTyping(true)
 
-        // Simulate AI Response
-        setTimeout(() => {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messages: [...messages, userMsg].map(m => ({
+                        role: m.role,
+                        content: m.content
+                    }))
+                }),
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'AI 응답을 가져오는데 실패했습니다.')
+            }
+
             const aiMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
-                content: `${input}에 대한 분석 결과, 백스윙 탑에서의 코킹 각도를 조금 더 유지하시면 비거리 향상에 큰 도움이 될 것 같습니다!`,
+                content: data.content,
                 timestamp: new Date()
             }
             setMessages(prev => [...prev, aiMsg])
+        } catch (error: any) {
+            console.error('Chat error:', error)
+            const errorMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: `죄송합니다. 오류가 발생했습니다: ${error.message}`,
+                timestamp: new Date()
+            }
+            setMessages(prev => [...prev, errorMsg])
+        } finally {
             setIsTyping(false)
-        }, 1500)
+        }
     }
 
     return (
@@ -95,14 +124,14 @@ export function AnimatedAIChat() {
                     >
                         <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                             <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center border ${msg.role === 'user'
-                                    ? 'bg-emerald-500/10 border-emerald-500/20 shadow-lg shadow-emerald-500/5'
-                                    : 'bg-white/5 border-white/10'
+                                ? 'bg-emerald-500/10 border-emerald-500/20 shadow-lg shadow-emerald-500/5'
+                                : 'bg-white/5 border-white/10'
                                 }`}>
                                 {msg.role === 'user' ? <User className="w-4 h-4 text-emerald-500" /> : <Bot className="w-4 h-4 text-zinc-400" />}
                             </div>
                             <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                    ? 'bg-emerald-500 text-black font-medium shadow-lg shadow-emerald-500/10 rounded-tr-none'
-                                    : 'bg-white/5 text-zinc-200 border border-white/5 rounded-tl-none'
+                                ? 'bg-emerald-500 text-black font-medium shadow-lg shadow-emerald-500/10 rounded-tr-none'
+                                : 'bg-white/5 text-zinc-200 border border-white/5 rounded-tl-none'
                                 }`}>
                                 {msg.content}
                             </div>
