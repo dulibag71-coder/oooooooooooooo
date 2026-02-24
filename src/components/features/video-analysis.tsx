@@ -76,13 +76,14 @@ export function VideoAnalysis() {
 
             const base64Data = await base64Promise;
 
-            // 2. Call our API route with userInput
-            const response = await fetch('/api/analyze', {
+            // 2. Call our unified AI API route with type 'analyze'
+            const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    type: 'analyze',
                     videoData: base64Data,
                     fileName: fileName,
                     userInput: userInput

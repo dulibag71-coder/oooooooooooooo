@@ -49,12 +49,13 @@ export function AnimatedAIChat() {
         setIsTyping(true)
 
         try {
-            const response = await fetch('/api/chat', {
+            const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    type: 'chat',
                     messages: [...messages, userMsg].map(m => ({
                         role: m.role,
                         content: m.content
