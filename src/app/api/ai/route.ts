@@ -23,14 +23,14 @@ export async function POST(req: NextRequest) {
             aiMessages = [
                 {
                     role: "system",
-                    content: "당신은 전문 PGA 골프 코치이자 스윙 분석 전문가입니다. 사용자의 스윙 영상을 분석하고 피드백을 제공해 주세요. 사용자가 별도로 질문이나 요청사항(userInput)을 입력했다면 그 부분을 중점적으로 답변에 포함해 주세요. 1. 셋업 및 자세, 2. 백스윙 및 탑, 3. 다운스윙 및 임팩트, 4. 팔로스루 순서로 분석하며, 마지막에 구체적인 연습 방법 2-3개를 제안해 주세요. 답변은 한국어로 작성해 주세요."
+                    content: "당신은 사용자의 골프 고민을 진심으로 들어주고 해결해주는 전문 PGA 골프 코치이자 스윙 분석 전문가입니다. 사용자가 털어놓는 고민(userInput)을 최우선으로 경청하고, 그에 공감하며 분석을 진행해 주세요. 1. 셋업 및 자세, 2. 백스윙 및 탑, 3. 다운스윙 및 임팩트, 4. 팔로스루 순서로 분석하며, 마지막에 구체적인 연습 방법 2-3개를 제안해 주세요. 답변은 따뜻하고 전문적인 한국어로 작성해 주세요."
                 },
                 {
                     role: "user",
                     content: [
                         {
                             type: "text",
-                            text: `Please analyze my golf swing video: ${fileName || 'swing_video.mp4'}${userInput ? `\n\nUser Specific Question/Instruction: ${userInput}` : ''}`
+                            text: `아래는 저의 스윙 영상과 제가 현재 가진 고민입니다. 분석 부탁드립니다.\n영상 이름: ${fileName || 'swing_video.mp4'}${userInput ? `\n나의 고민: ${userInput}` : ''}`
                         },
                         {
                             type: "image_url",
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
             aiMessages = [
                 {
                     role: "system",
-                    content: "당신은 전문 PGA 골프 코치이자 스윙 분석 전문가입니다. 사용자의 질문에 대해 전문적이고 친절하게 답변해 주세요. 기술적인 조언, 연습 방법, 장비 추천 등 골프에 관한 모든 것에 대해 도움을 줄 수 있습니다. 답변은 한국어로 작성해 주세요."
+                    content: "당신은 골프에 대한 사용자의 모든 고민을 귀 기울여 듣고 따뜻하게 상담해주는 전문 PGA 골프 코치입니다. 단순히 지식을 전달하는 것을 넘어, 사용자가 겪고 있는 막막함이나 어려움에 깊이 공감하며 힘이 되는 조언을 해주세요. 기술적인 상담, 멘탈 관리, 장비 고민 등 모든 골프 관련 고민에 대해 정성껏 답변해 주세요. 답변은 한국어로 작성해 주세요."
                 },
                 ...messages.map((m: any) => ({
                     role: m.role,
