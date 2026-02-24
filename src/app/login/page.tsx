@@ -1,12 +1,34 @@
 'use client'
 
 import { LiquidGrassAnimation } from "@/components/ui/liquid-grass-animation"
+import { useAuth } from '@/context/auth-context'
+import { supabase } from '@/lib/supabase'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
+    const { user, loading } = useAuth()
+    const router = useRouter()
 
-    const handleGoogleLogin = () => {
-        // Implementation for future use
-        console.log("Google Login Clicked")
+    useEffect(() => {
+        if (!loading && user) {
+            router.push('/')
+        }
+    }, [user, loading, router])
+
+    const handleGoogleLogin = async () => {
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin + '/auth/callback'
+                }
+            })
+            if (error) throw error
+        } catch (error) {
+            console.error('Error logging in with Google:', error)
+            alert('로그인 중 오류가 발생했습니다.')
+        }
     }
 
     return (
