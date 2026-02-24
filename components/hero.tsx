@@ -38,13 +38,13 @@ const Hero = () => {
                 <button
                     onClick={navigateToPersonalSite}
                     className="
-            text-white text-2xl tracking-[0.2em] uppercase font-extralight
+            text-white text-2xl tracking-[0.2em] uppercase font-mono
             transition-all duration-700
             hover:tracking-[0.3em] animate-pulse
             cursor-pointer bg-transparent border-none outline-none
           "
                 >
-                    Enter
+                    시작하기
                 </button>
             </div>
         </div>
