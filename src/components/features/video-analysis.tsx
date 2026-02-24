@@ -62,18 +62,46 @@ export function VideoAnalysis() {
     const runAnalysis = async () => {
         if (!file) return
         setIsAnalyzing(true)
+        setAnalysisResult(null)
 
-        // Simulate AI API Call
-        setTimeout(() => {
-            setAnalysisResult(`영상 분석이 완료되었습니다! 
-      
-1. 백스윙: 정점에서의 팔 위치는 완벽합니다.
-2. 다운스윙: 체중 이동이 약간 늦어지는 경향이 있습니다.
-3. 임팩트: 클럽 패스가 정렬되어 있어 방향성이 좋습니다.
+        try {
+            // 1. Convert file to base64 for multimodal analysis
+            // Note: For real production, we might want to extract a frame or upload to storage first.
+            // Here we use a FileReader for demonstration with base64.
+            const reader = new FileReader();
+            const base64Promise = new Promise<string>((resolve, reject) => {
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
 
-해결책: 다운스윙 시작 시 왼쪽 힙의 회전을 조금 더 의식해 보세요.`)
+            const base64Data = await base64Promise;
+
+            // 2. Call our API route
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    videoData: base64Data,
+                    fileName: fileName
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || '분석 중 오류가 발생했습니다.');
+            }
+
+            setAnalysisResult(data.analysis);
+        } catch (error: any) {
+            console.error('Analysis Error:', error);
+            setAnalysisResult(`오류 발생: ${error.message || 'AI 분석에 실패했습니다. 다시 시도해 주세요.'}`);
+        } finally {
             setIsAnalyzing(false)
-        }, 3000)
+        }
     }
 
     return (
